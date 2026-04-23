@@ -571,13 +571,13 @@ From `envs/staging` or `envs/prod`:
 terraform init -backend-config=backend.hcl
 terraform fmt -recursive
 terraform validate
-terraform plan
+terraform plan -out=staging-bootstrap.tfplan
 ```
 
 ### Apply the environment
 
 ```bash
-terraform apply
+terraform apply staging-bootstrap.tfplan
 ```
 
 ---
