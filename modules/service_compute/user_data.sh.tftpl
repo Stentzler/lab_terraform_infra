@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf update -y
+dnf install -y docker
+
+systemctl enable docker
+systemctl start docker
+
+aws ecr get-login-password --region ${aws_region} \
+  | docker login \
+    --username AWS \
+    --password-stdin ${repository_url}
+
+docker pull ${container_image}
+
+docker rm -f app || true
+
+docker run -d \
+  --name app \
+  --restart unless-stopped \
+  -p ${app_port}:${app_port} \
+  ${container_image}
